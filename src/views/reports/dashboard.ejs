@@ -1,0 +1,137 @@
+<% layout('layout') %>
+<div class="d-flex align-items-center justify-content-between mb-3">
+  <h3 class="mb-0">Reports</h3>
+  <a class="btn btn-outline-secondary" href="/reports/export/bookings.csv"><i class="bi bi-download"></i> Export Bookings CSV</a>
+</div>
+
+<div class="row g-3 mb-3">
+  <div class="col-md-3">
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <h6 class="text-muted mb-1">Total Bookings</h6>
+        <div class="display-6"><%= totalBookings %></div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <h6 class="text-muted mb-1">Bookings Today</h6>
+        <div class="display-6"><%= todayBookings %></div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <h6 class="text-muted mb-1">Bookings This Month</h6>
+        <div class="display-6"><%= monthBookings %></div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <h6 class="text-muted mb-1">Commission (This Month)</h6>
+        <div class="display-6"><%= commissionThisMonth %></div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <h6 class="text-muted mb-1">Payment Status</h6>
+        <div>
+          <span class="badge text-bg-success me-2">All Paid: <%= paymentStatusCounts.ALL_PAID %></span>
+          <span class="badge text-bg-warning me-2">Party Pending: <%= paymentStatusCounts.PARTY_PENDING %></span>
+          <span class="badge text-bg-secondary">Malik Pending: <%= paymentStatusCounts.MALIK_PENDING %></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="report-details" class="d-none">
+  <div class="row g-3">
+    <div class="col-lg-6">
+      <div class="card shadow-sm h-100">
+        <div class="card-body">
+          <h5 class="card-title">Top Parties by Profit (This Month)</h5>
+          <div class="table-responsive">
+            <table class="table table-sm" id="tbl-parties">
+              <thead>
+                <tr><th>Party</th><th class="text-end">Commission</th></tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-6">
+      <div class="card shadow-sm h-100">
+        <div class="card-body">
+          <h5 class="card-title">Top Vehicles by Usage</h5>
+          <div class="table-responsive">
+            <table class="table table-sm" id="tbl-vehicles">
+              <thead>
+                <tr><th>Vehicle</th><th>Owner</th><th class="text-end">Trips</th></tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-3 mt-1">
+    <div class="col-md-6">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <h6 class="text-muted mb-1">Outstanding from Parties</h6>
+          <div class="display-6" id="party-outstanding">0</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <h6 class="text-muted mb-1">Outstanding to Maliks</h6>
+          <div class="display-6" id="malik-outstanding">0</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+  try {
+    const res = await fetch('/reports/details');
+    if (!res.ok) return;
+    const data = await res.json();
+    const tblParties = document.querySelector('#tbl-parties tbody');
+    const tblVehicles = document.querySelector('#tbl-vehicles tbody');
+    tblParties.innerHTML = '';
+    (data.partyWiseProfit || []).forEach(p => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `<td>${p.partyName}</td><td class="text-end">${p.profit}</td>`;
+      tblParties.appendChild(tr);
+    });
+    tblVehicles.innerHTML = '';
+    (data.vehicleUsage || []).forEach(v => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `<td>${v.vehicleNumber}</td><td>${v.ownerName}</td><td class="text-end">${v.count}</td>`;
+      tblVehicles.appendChild(tr);
+    });
+    document.querySelector('#party-outstanding').textContent = data.partyOutstanding || 0;
+    document.querySelector('#malik-outstanding').textContent = data.malikOutstanding || 0;
+    document.querySelector('#report-details').classList.remove('d-none');
+  } catch (e) {
+    console.error('Failed to load details', e);
+  }
+});
+</script>
+
+

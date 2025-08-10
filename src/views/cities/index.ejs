@@ -1,0 +1,41 @@
+<% layout('layout') %>
+<div class="d-flex align-items-center justify-content-between mb-3">
+  <h3 class="mb-0">Cities</h3>
+  <a href="/cities/new" class="btn btn-primary"><i class="bi bi-plus-lg"></i> Add City</a>
+</div>
+
+<div class="table-responsive card shadow-sm">
+  <table class="table table-hover table-striped mb-0">
+    <thead class="table-light">
+      <tr>
+        <th>#</th>
+        <th>Name</th>
+        <th>State</th>
+        <th>Status</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% cities.forEach(c => { %>
+        <tr>
+          <td><%= c.id %></td>
+          <td><%= c.name %></td>
+          <td><%= c.state || '' %></td>
+          <td>
+            <span class="badge <%= c.isActive ? 'text-bg-success' : 'text-bg-secondary' %>"><%= c.isActive ? 'Active' : 'Inactive' %></span>
+          </td>
+          <td class="text-end">
+            <a class="btn btn-sm btn-outline-secondary" href="/cities/<%= c.id %>/edit"><i class="bi bi-pencil"></i></a>
+            <form method="post" action="/cities/<%= c.id %>/toggle" class="d-inline">
+              <button class="btn btn-sm <%= c.isActive ? 'btn-outline-warning' : 'btn-outline-success' %>" type="submit">
+                <i class="bi <%= c.isActive ? 'bi-pause' : 'bi-play' %>"></i>
+              </button>
+            </form>
+          </td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</div>
+
+

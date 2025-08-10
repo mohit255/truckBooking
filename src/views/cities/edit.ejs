@@ -1,0 +1,27 @@
+<% layout('layout') %>
+<div class="d-flex align-items-center justify-content-between mb-3">
+  <h3 class="mb-0">Edit City</h3>
+  <a href="/cities" class="btn btn-outline-secondary"><i class="bi bi-arrow-left"></i> Back</a>
+</div>
+
+<form method="post" action="/cities/<%= city.id %>?_method=PUT" class="card card-body shadow-sm">
+  <div class="row g-3">
+    <div class="col-md-6">
+      <label class="form-label">City Name</label>
+      <input class="form-control" name="name" value="<%= city.name %>" required>
+    </div>
+    <div class="col-md-6">
+      <label class="form-label">State</label>
+      <input class="form-control" name="state" value="<%= city.state || '' %>">
+    </div>
+    <div class="col-12 form-check ms-2">
+      <input class="form-check-input" type="checkbox" name="isActive" <%= city.isActive ? 'checked' : '' %> id="activeCity" />
+      <label class="form-check-label" for="activeCity">Active?</label>
+    </div>
+    <div class="col-12">
+      <button type="submit" class="btn btn-primary"><i class="bi bi-save"></i> Update</button>
+    </div>
+  </div>
+</form>
+
+

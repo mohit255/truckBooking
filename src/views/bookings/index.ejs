@@ -1,0 +1,207 @@
+<% layout('layout') %>
+<div class="d-flex align-items-center justify-content-between mb-3">
+  <h3 class="mb-0">Bookings</h3>
+  <div class="d-flex gap-2">
+    <a href="/bookings/export<%= Object.keys(query).length > 0 ? '?' + new URLSearchParams(query).toString() : '' %>" class="btn btn-success">
+      <i class="bi bi-download"></i> Export CSV
+    </a>
+    <a href="/bookings/new" class="btn btn-primary"><i class="bi bi-plus-lg"></i> New Booking</a>
+  </div>
+</div>
+
+<!-- Filters -->
+<div class="card shadow-sm mb-3">
+  <div class="card-header">
+    <h6 class="mb-0"><i class="bi bi-funnel"></i> Filters</h6>
+  </div>
+  <div class="card-body">
+    <form method="GET" class="row g-3">
+      <div class="col-md-2">
+        <label class="form-label">From Date</label>
+        <input class="form-control" type="date" name="fromDate" value="<%= query?.fromDate || '' %>">
+      </div>
+      <div class="col-md-2">
+        <label class="form-label">To Date</label>
+        <input class="form-control" type="date" name="toDate" value="<%= query?.toDate || '' %>">
+      </div>
+      <div class="col-md-2">
+        <label class="form-label">Party Name</label>
+        <input class="form-control" type="text" name="partyName" placeholder="Party Name" value="<%= query?.partyName || '' %>">
+      </div>
+      <div class="col-md-2">
+        <label class="form-label">Status</label>
+        <select class="form-select" name="status">
+          <option value="">All Status</option>
+                                                            <option value="PENDING" <%= query?.status==='PENDING'?'selected':'' %>>Pending</option>
+                         <option value="IN_TRANSIT" <%= query?.status==='IN_TRANSIT'?'selected':'' %>>In Transit</option>
+                         <option value="COMPLETED" <%= query?.status==='COMPLETED'?'selected':'' %>>Completed</option>
+                         <option value="CANCELLED" <%= query?.status==='CANCELLED'?'selected':'' %>>Cancelled</option>
+        </select>
+      </div>
+      <div class="col-md-2">
+        <label class="form-label">Payment Status</label>
+        <select class="form-select" name="paymentStatus">
+          <option value="">All Payments</option>
+          <option value="PARTY_PENDING" <%= query?.paymentStatus==='PARTY_PENDING'?'selected':'' %>>Party Pending</option>
+          <option value="MALIK_PENDING" <%= query?.paymentStatus==='MALIK_PENDING'?'selected':'' %>>Malik Pending</option>
+          <option value="COMPLETED" <%= query?.paymentStatus==='COMPLETED'?'selected':'' %>>Completed</option>
+        </select>
+      </div>
+      <div class="col-md-2">
+        <label class="form-label">Vehicle Type</label>
+        <select class="form-select" name="vehicleType">
+          <option value="">All Types</option>
+          <option value="CONTAINER_32FT" <%= query?.vehicleType==='CONTAINER_32FT'?'selected':'' %>>32ft Container</option>
+          <option value="OPEN_20FT" <%= query?.vehicleType==='OPEN_20FT'?'selected':'' %>>20ft Open Body</option>
+          <option value="OPEN_22FT" <%= query?.vehicleType==='OPEN_22FT'?'selected':'' %>>22ft Open Body</option>
+          <option value="TRAILER" <%= query?.vehicleType==='TRAILER'?'selected':'' %>>Trailer</option>
+          <option value="OTHER" <%= query?.vehicleType==='OTHER'?'selected':'' %>>Other</option>
+        </select>
+      </div>
+      <div class="col-md-2">
+        <label class="form-label">Source City</label>
+        <select class="form-select" name="sourceCityId">
+          <option value="">All Cities</option>
+          <% cities.forEach(city => { %>
+            <option value="<%= city.id %>" <%= query?.sourceCityId==city.id?'selected':'' %>><%= city.name %></option>
+          <% }) %>
+        </select>
+      </div>
+      <div class="col-md-2">
+        <label class="form-label">Destination City</label>
+        <select class="form-select" name="destinationCityId">
+          <option value="">All Cities</option>
+          <% cities.forEach(city => { %>
+            <option value="<%= city.id %>" <%= query?.destinationCityId==city.id?'selected':'' %>><%= city.name %></option>
+          <% }) %>
+        </select>
+      </div>
+      <div class="col-md-2">
+        <label class="form-label">Malik Name</label>
+        <input class="form-control" type="text" name="malikName" placeholder="Malik Name" value="<%= query?.malikName || '' %>">
+      </div>
+      <div class="col-md-2">
+        <label class="form-label">Vehicle Number</label>
+        <input class="form-control" type="text" name="vehicleNumber" placeholder="Vehicle No" value="<%= query?.vehicleNumber || '' %>">
+      </div>
+      <div class="col-md-2">
+        <label class="form-label">Min Amount</label>
+        <input class="form-control" type="number" name="minAmount" placeholder="Min Amount" value="<%= query?.minAmount || '' %>">
+      </div>
+      <div class="col-md-2">
+        <label class="form-label">Max Amount</label>
+        <input class="form-control" type="number" name="maxAmount" placeholder="Max Amount" value="<%= query?.maxAmount || '' %>">
+      </div>
+      <div class="col-md-3">
+        <label class="form-label">General Search</label>
+        <input class="form-control" type="text" name="q" placeholder="Search in all fields" value="<%= query?.q || '' %>">
+      </div>
+      <div class="col-md-2">
+        <label class="form-label">&nbsp;</label>
+        <div class="d-flex gap-2">
+          <button type="submit" class="btn btn-primary btn-sm flex-fill"><i class="bi bi-search"></i> Filter</button>
+          <a href="/bookings" class="btn btn-outline-secondary btn-sm"><i class="bi bi-x-lg"></i> Clear</a>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Summary Stats -->
+<div class="row mb-3">
+  <div class="col-md-3">
+    <div class="card bg-primary text-white">
+      <div class="card-body text-center">
+        <h5 class="card-title"><%= bookings.length %></h5>
+        <p class="card-text">Total Bookings</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card bg-success text-white">
+      <div class="card-body text-center">
+        <h5 class="card-title">₹<%= bookings.reduce((sum, b) => sum + Number(b.partyRate || 0), 0).toLocaleString() %></h5>
+        <p class="card-text">Total Amount</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card bg-info text-white">
+      <div class="card-body text-center">
+        <h5 class="card-title">₹<%= bookings.reduce((sum, b) => sum + Number(b.commission || 0), 0).toLocaleString() %></h5>
+        <p class="card-text">Total Commission</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card bg-warning text-white">
+      <div class="card-body text-center">
+        <h5 class="card-title"><%= bookings.filter(b => b.status === 'PENDING').length %></h5>
+        <p class="card-text">Pending</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="table-responsive card shadow-sm">
+  <table class="table table-hover table-striped mb-0">
+    <thead class="table-light">
+      <tr>
+        <th>#</th>
+        <th>Date</th>
+        <th>Party</th>
+        <th>From</th>
+        <th>To</th>
+        <th>Pickup Address</th>
+        <th>Drop Address</th>
+        <th>Vehicle</th>
+        <th>Vehicle No</th>
+        <th>Malik</th>
+        <th>Malik Rate</th>
+        <th>Party Rate</th>
+                               <th>Commission</th>
+                       <th>Status</th>
+                       <th>Notes</th>
+                       <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% if (bookings.length === 0) { %>
+        <tr>
+          <td colspan="15" class="text-center py-4">
+            <div class="text-muted">
+              <i class="bi bi-inbox display-4"></i>
+              <p class="mt-2">No bookings found matching your filters</p>
+              <a href="/bookings" class="btn btn-outline-primary btn-sm">Clear Filters</a>
+            </div>
+          </td>
+        </tr>
+      <% } else { %>
+        <% bookings.forEach(b => { %>
+          <tr>
+            <td><%= b.id %></td>
+            <td><%= new Date(b.bookingDate).toISOString().slice(0,10) %></td>
+            <td><%= b.partyName %></td>
+            <td><%= b.sourceCity ? b.sourceCity.name : '' %></td>
+            <td><%= b.destinationCity ? b.destinationCity.name : '' %></td>
+            <td><%= b.pickupAddress || '' %></td>
+            <td><%= b.dropAddress || '' %></td>
+            <td><span class="badge text-bg-secondary"><%= b.requestedVehicle %></span></td>
+            <td><%= b.vehicle ? b.vehicle.vehicleNumber : '' %></td>
+            <td><%= b.malikName || '' %></td>
+            <td><%= b.malikRate %></td>
+            <td><%= b.partyRate %></td>
+                                       <td><%= b.commission %></td>
+                           <td>
+                             <span class="badge <%= b.status==='COMPLETED' ? 'text-bg-success' : (b.status==='IN_TRANSIT' ? 'text-bg-warning' : (b.status==='CANCELLED' ? 'text-bg-danger' : 'text-bg-secondary')) %>"><%= b.status %></span>
+                           </td>
+                           <td><%= b.notes || '-' %></td>
+                           <td><a class="btn btn-sm btn-outline-secondary" href="/bookings/<%= b.id %>/edit"><i class="bi bi-pencil"></i></a></td>
+          </tr>
+        <% }) %>
+      <% } %>
+    </tbody>
+  </table>
+</div>
+
+

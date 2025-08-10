@@ -1,0 +1,6 @@
+/* Custom tweaks */
+.table thead th { white-space: nowrap; }
+.status-badge { padding: .25rem .5rem; border-radius: 999px; font-size: .75rem; }
+.status-active { background-color: #d1e7dd; color: #0f5132; }
+.status-expired { background-color: #f8d7da; color: #842029; }
+

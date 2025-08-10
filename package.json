@@ -1,0 +1,41 @@
+{
+  "name": "trucksoft",
+  "version": "1.0.0",
+  "description": "Transport Booking, Vehicle & Commission Management System",
+  "main": "src/server.js",
+  "scripts": {
+    "dev": "nodemon src/server.js",
+    "start": "node src/server.js",
+    "migrate": "prisma migrate dev",
+    "generate": "prisma generate",
+    "seed": "node prisma/seed.js"
+  },
+  "keywords": [
+    "transport",
+    "logistics",
+    "booking",
+    "prisma",
+    "mysql",
+    "ejs",
+    "express"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@prisma/client": "^5.18.0",
+    "csv-stringify": "^6.5.0",
+    "dayjs": "^1.11.11",
+    "dotenv": "^16.4.5",
+    "ejs": "^3.1.10",
+    "ejs-mate": "^4.0.0",
+    "express": "^4.19.2",
+    "express-session": "^1.17.3",
+    "connect-flash": "^0.1.1",
+    "method-override": "^3.0.0",
+    "morgan": "^1.10.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.0",
+    "prisma": "^5.18.0"
+  }
+}

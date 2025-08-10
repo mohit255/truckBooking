@@ -1,0 +1,61 @@
+<% layout('layout') %>
+<div class="d-flex align-items-center justify-content-between mb-3">
+  <h3 class="mb-0">Add Vehicle</h3>
+  <a href="/vehicles" class="btn btn-outline-secondary"><i class="bi bi-arrow-left"></i> Back</a>
+</div>
+
+<form method="post" action="/vehicles" class="card card-body shadow-sm">
+  <div class="row g-3">
+    <div class="col-md-4">
+      <label class="form-label">Vehicle Number</label>
+      <input class="form-control" name="vehicleNumber" required>
+    </div>
+    <div class="col-md-4">
+      <label class="form-label">Vehicle Type</label>
+      <select class="form-select" name="vehicleType" required>
+        <option value="CONTAINER_32FT">32ft Container</option>
+        <option value="OPEN_20FT">20ft Open Body</option>
+        <option value="OPEN_22FT">22ft Open Body</option>
+        <option value="TRAILER">Trailer</option>
+        <option value="OTHER">Other</option>
+      </select>
+    </div>
+    <div class="col-md-4">
+      <label class="form-label">Firm</label>
+      <input class="form-control" name="firm" placeholder="Company/Firm Name">
+    </div>
+
+    <div class="col-md-4">
+      <label class="form-label">Owner (Malik) Name</label>
+      <input class="form-control" name="ownerName" required>
+    </div>
+    <div class="col-md-4">
+      <label class="form-label">Malik Contact Number</label>
+      <input class="form-control" name="ownerContact" required>
+    </div>
+    <div class="col-md-4">
+      <label class="form-label">Preferred Route Source City</label>
+      <select class="form-select" name="preferredRouteSourceCityId">
+        <option value="">-- Select City --</option>
+        <% (cities || []).forEach(c => { %>
+          <option value="<%= c.id %>"><%= c.name %><%= c.state ? ' ('+c.state+')' : '' %></option>
+        <% }) %>
+      </select>
+    </div>
+    <div class="col-md-4">
+      <label class="form-label">Preferred Route Destination City</label>
+      <select class="form-select" name="preferredRouteDestinationCityId">
+        <option value="">-- Select City --</option>
+        <% (cities || []).forEach(c => { %>
+          <option value="<%= c.id %>"><%= c.name %><%= c.state ? ' ('+c.state+')' : '' %></option>
+        <% }) %>
+      </select>
+    </div>
+
+    <div class="col-12">
+      <button type="submit" class="btn btn-primary"><i class="bi bi-save"></i> Save</button>
+    </div>
+  </div>
+</form>
+
+

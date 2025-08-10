@@ -1,0 +1,193 @@
+<% layout('layout') %>
+<div class="d-flex align-items-center justify-content-between mb-3">
+  <h3 class="mb-0">Payments</h3>
+  <div class="d-flex gap-2">
+    <a href="/payments/export<%= Object.keys(query).length > 0 ? '?' + new URLSearchParams(query).toString() : '' %>" class="btn btn-success">
+      <i class="bi bi-download"></i> Export CSV
+    </a>
+  </div>
+</div>
+
+<!-- Filters -->
+<div class="card shadow-sm mb-3">
+  <div class="card-header">
+    <h6 class="mb-0"><i class="bi bi-funnel"></i> Filters</h6>
+  </div>
+  <div class="card-body">
+    <form method="GET" class="row g-3">
+      <div class="col-md-2">
+        <label class="form-label">From Date</label>
+        <input class="form-control" type="date" name="fromDate" value="<%= query?.fromDate || '' %>">
+      </div>
+      <div class="col-md-2">
+        <label class="form-label">To Date</label>
+        <input class="form-control" type="date" name="toDate" value="<%= query?.toDate || '' %>">
+      </div>
+      <div class="col-md-2">
+        <label class="form-label">Party Name</label>
+        <input class="form-control" type="text" name="partyName" placeholder="Party Name" value="<%= query?.partyName || '' %>">
+      </div>
+      <div class="col-md-2">
+        <label class="form-label">Payment Status</label>
+        <select class="form-select" name="paymentStatus">
+          <option value="">All Status</option>
+          <option value="ALL_PAID" <%= query?.paymentStatus==='ALL_PAID'?'selected':'' %>>All Paid</option>
+          <option value="PARTY_PENDING" <%= query?.paymentStatus==='PARTY_PENDING'?'selected':'' %>>Party Pending</option>
+          <option value="MALIK_PENDING" <%= query?.paymentStatus==='MALIK_PENDING'?'selected':'' %>>Malik Pending</option>
+        </select>
+      </div>
+      <div class="col-md-2">
+        <label class="form-label">Min Amount</label>
+        <input class="form-control" type="number" name="minAmount" placeholder="Min Amount" value="<%= query?.minAmount || '' %>">
+      </div>
+      <div class="col-md-2">
+        <label class="form-label">Max Amount</label>
+        <input class="form-control" type="number" name="maxAmount" placeholder="Max Amount" value="<%= query?.maxAmount || '' %>">
+      </div>
+      <div class="col-md-2">
+        <label class="form-label">Min Commission</label>
+        <input class="form-control" type="number" name="minCommission" placeholder="Min Commission" value="<%= query?.minCommission || '' %>">
+      </div>
+      <div class="col-md-2">
+        <label class="form-label">Max Commission</label>
+        <input class="form-control" type="number" name="maxCommission" placeholder="Max Commission" value="<%= query?.maxCommission || '' %>">
+      </div>
+      <div class="col-md-3">
+        <label class="form-label">General Search</label>
+        <input class="form-control" type="text" name="q" placeholder="Search in all fields" value="<%= query?.q || '' %>">
+      </div>
+      <div class="col-md-2">
+        <label class="form-label">&nbsp;</label>
+        <div class="d-flex gap-2">
+          <button type="submit" class="btn btn-primary btn-sm flex-fill"><i class="bi bi-search"></i> Filter</button>
+          <a href="/payments" class="btn btn-outline-secondary btn-sm"><i class="bi bi-x-lg"></i> Clear</a>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Summary Stats -->
+<div class="row mb-3">
+  <div class="col-md-2">
+    <div class="card bg-primary text-white">
+      <div class="card-body text-center">
+        <h5 class="card-title"><%= stats.totalPayments %></h5>
+        <p class="card-text">Total Payments</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-2">
+    <div class="card bg-success text-white">
+      <div class="card-body text-center">
+        <h5 class="card-title">₹<%= stats.totalAmount.toLocaleString() %></h5>
+        <p class="card-text">Total Amount</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-2">
+    <div class="card bg-info text-white">
+      <div class="card-body text-center">
+        <h5 class="card-title">₹<%= stats.totalCommission.toLocaleString() %></h5>
+        <p class="card-text">Total Commission</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-2">
+    <div class="card bg-warning text-white">
+      <div class="card-body text-center">
+        <h5 class="card-title"><%= stats.pendingPayments %></h5>
+        <p class="card-text">Pending Payments</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-2">
+    <div class="card bg-black text-white">
+      <div class="card-body text-center">
+        <h5 class="card-title">₹<%= stats.totalMalikPending.toLocaleString() %></h5>
+        <p class="card-text">Malik Pending</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-2">
+    <div class="card bg-danger text-white">
+      <div class="card-body text-center">
+        <h5 class="card-title">₹<%= stats.totalPartyPending.toLocaleString() %></h5>
+        <p class="card-text">Party Pending</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="table-responsive card shadow-sm">
+  <table class="table table-hover table-striped mb-0">
+    <thead class="table-light">
+      <tr>
+        <th>#</th>
+        <th>Date</th>
+        <th>Party</th>
+        <th>From</th>
+        <th>To</th>
+        <th>Vehicle</th>
+        <th>Party Total</th>
+        <th>Party Paid</th>
+        <th>Party Pending</th>
+        <th>Malik Payable</th>
+        <th>Malik Paid</th>
+        <th>Malik Pending</th>
+        <th>Commission</th>
+        <th>Status</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% if (payments.length === 0) { %>
+        <tr>
+          <td colspan="14" class="text-center py-4">
+            <div class="text-muted">
+              <i class="bi bi-credit-card display-4"></i>
+              <p class="mt-2">No payments found matching your filters</p>
+              <a href="/payments" class="btn btn-outline-primary btn-sm">Clear Filters</a>
+            </div>
+          </td>
+        </tr>
+      <% } else { %>
+        <% payments.forEach(p => { %>
+          <tr>
+            <td><%= p.id %></td>
+            <td><%= new Date(p.booking.createdAt).toISOString().slice(0,10) %></td>
+            <td><%= p.booking.partyName %></td>
+            <td><%= p.booking.sourceCity ? p.booking.sourceCity.name : '' %></td>
+            <td><%= p.booking.destinationCity ? p.booking.destinationCity.name : '' %></td>
+            <td><%= p.booking.vehicle ? p.booking.vehicle.vehicleNumber : '' %></td>
+            <td>₹<%= p.totalFromParty %></td>
+            <td>₹<%= p.paidByParty %></td>
+            <td>
+              <% const partyPending = Number(p.totalFromParty) - Number(p.paidByParty); %>
+              <span class="badge <%= partyPending > 0 ? 'text-bg-warning' : 'text-bg-success' %>">
+                ₹<%= partyPending.toFixed(2) %>
+              </span>
+            </td>
+            <td>₹<%= p.amountPayableMalik %></td>
+            <td>₹<%= p.paidToMalik %></td>
+            <td>
+              <% const malikPending = Number(p.amountPayableMalik) - Number(p.paidToMalik); %>
+              <span class="badge <%= malikPending > 0 ? 'text-bg-warning' : 'text-bg-success' %>">
+                ₹<%= malikPending.toFixed(2) %>
+              </span>
+            </td>
+            <td>₹<%= p.commissionEarned %></td>
+            <td>
+              <span class="badge <%= p.paymentStatus==='ALL_PAID' ? 'text-bg-success' : (p.paymentStatus==='PARTY_PENDING' ? 'text-bg-warning' : 'text-bg-secondary') %>">
+                <%= p.paymentStatus %>
+              </span>
+            </td>
+            <td><a class="btn btn-sm btn-outline-secondary" href="/payments/<%= p.bookingId %>"><i class="bi bi-eye"></i></a></td>
+          </tr>
+        <% }) %>
+      <% } %>
+    </tbody>
+  </table>
+</div>
+
+

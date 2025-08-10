@@ -1,0 +1,68 @@
+<% layout('layout') %>
+<div class="d-flex align-items-center justify-content-between mb-3">
+  <h3 class="mb-0">Update Booking</h3>
+  <a href="/bookings" class="btn btn-outline-secondary"><i class="bi bi-arrow-left"></i> Back</a>
+</div>
+
+<form method="post" action="/bookings/<%= booking.id %>?_method=PUT" class="card card-body shadow-sm">
+  <div class="row g-3">
+    <div class="col-md-6">
+      <label class="form-label">Assign Vehicle</label>
+      <select class="form-select" name="vehicleId">
+        <option value="">-- None --</option>
+        <% vehicles.forEach(v => { %>
+          <option value="<%= v.id %>" <%= booking.vehicleId===v.id ? 'selected' : '' %>><%= v.vehicleNumber %> (<%= v.vehicleType %>) - <%= v.ownerName %></option>
+        <% }) %>
+      </select>
+    </div>
+    <div class="col-md-3">
+      <label class="form-label">Source City</label>
+      <select class="form-select" name="sourceCityId" required>
+        <option value="">-- Select City --</option>
+        <% (cities || []).forEach(c => { %>
+          <option value="<%= c.id %>" <%= booking.sourceCityId===c.id ? 'selected' : '' %>><%= c.name %><%= c.state ? ' ('+c.state+')' : '' %></option>
+        <% }) %>
+      </select>
+    </div>
+    <div class="col-md-3">
+      <label class="form-label">Destination City</label>
+      <select class="form-select" name="destinationCityId" required>
+        <option value="">-- Select City --</option>
+        <% (cities || []).forEach(c => { %>
+          <option value="<%= c.id %>" <%= booking.destinationCityId===c.id ? 'selected' : '' %>><%= c.name %><%= c.state ? ' ('+c.state+')' : '' %></option>
+        <% }) %>
+      </select>
+    </div>
+    <div class="col-md-6">
+      <label class="form-label">Pickup Address</label>
+      <input class="form-control" name="pickupAddress" value="<%= booking.pickupAddress || '' %>" placeholder="Enter detailed pickup address">
+    </div>
+    <div class="col-md-6">
+      <label class="form-label">Drop Address</label>
+      <input class="form-control" name="dropAddress" value="<%= booking.dropAddress || '' %>" placeholder="Enter detailed drop address">
+    </div>
+    <div class="col-md-6">
+      <label class="form-label">Malik Name</label>
+      <input class="form-control" name="malikName" value="<%= booking.malikName || '' %>">
+    </div>
+    <% const isDisabled = adminRole !== 'SUPER_ADMIN' && (booking.status === 'COMPLETED' || booking.status === 'CANCELLED'); %>
+    <div class="col-md-4">
+      <label class="form-label">Status</label>
+      <select class="form-select <%= isDisabled ? 'not-allowed' : '' %>" name="status" <%= isDisabled ? 'disabled' : '' %>>
+        <option value="PENDING" <%= booking.status==='PENDING'?'selected':'' %>>Pending</option>
+        <option value="IN_TRANSIT" <%= booking.status==='IN_TRANSIT'?'selected':'' %>>In-transit</option>
+        <option value="COMPLETED" <%= booking.status==='COMPLETED'?'selected':'' %>>Completed</option>
+        <option value="CANCELLED" <%= booking.status==='CANCELLED'?'selected':'' %>>Cancelled</option>
+      </select>
+    </div>
+    <div class="col-12">
+      <label class="form-label">Notes</label>
+      <textarea class="form-control" name="notes" rows="3" placeholder="Enter any additional notes or comments"><%= booking.notes || '' %></textarea>
+    </div>
+    <div class="col-12">
+      <button type="submit" class="btn btn-primary"><i class="bi bi-save"></i> Update</button>
+    </div>
+  </div>
+</form>
+
+

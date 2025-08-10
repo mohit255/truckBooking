@@ -1,0 +1,67 @@
+<% layout('layout') %>
+<div class="d-flex align-items-center justify-content-between mb-3">
+  <h3 class="mb-0">Edit Vehicle</h3>
+  <a href="/vehicles" class="btn btn-outline-secondary"><i class="bi bi-arrow-left"></i> Back</a>
+</div>
+
+<form method="post" action="/vehicles/<%= vehicle.id %>?_method=PUT" class="card card-body shadow-sm">
+  <div class="row g-3">
+    <div class="col-md-4">
+      <label class="form-label">Vehicle Number</label>
+      <input class="form-control" name="vehicleNumber" value="<%= vehicle.vehicleNumber %>" required>
+    </div>
+    <div class="col-md-4">
+      <label class="form-label">Vehicle Type</label>
+      <select class="form-select" name="vehicleType" required>
+        <option value="CONTAINER_32FT" <%= vehicle.vehicleType==='CONTAINER_32FT'?'selected':'' %>>32ft Container</option>
+        <option value="OPEN_20FT" <%= vehicle.vehicleType==='OPEN_20FT'?'selected':'' %>>20ft Open Body</option>
+        <option value="OPEN_22FT" <%= vehicle.vehicleType==='OPEN_22FT'?'selected':'' %>>22ft Open Body</option>
+        <option value="TRAILER" <%= vehicle.vehicleType==='TRAILER'?'selected':'' %>>Trailer</option>
+        <option value="OTHER" <%= vehicle.vehicleType==='OTHER'?'selected':'' %>>Other</option>
+      </select>
+    </div>
+    <div class="col-md-4">
+      <label class="form-label">Firm</label>
+      <input class="form-control" name="firm" placeholder="Company/Firm Name" value="<%= vehicle.firm || '' %>">
+    </div>
+
+    <div class="col-md-4">
+      <label class="form-label">Owner (Malik) Name</label>
+      <input class="form-control" name="ownerName" value="<%= vehicle.ownerName %>" required>
+    </div>
+    <div class="col-md-4">
+      <label class="form-label">Malik Contact Number</label>
+      <input class="form-control" name="ownerContact" value="<%= vehicle.ownerContact %>" required>
+    </div>
+    <div class="col-md-4">
+      <label class="form-label">Preferred Route Source City</label>
+      <select class="form-select" name="preferredRouteSourceCityId">
+        <option value="">-- Select City --</option>
+        <% (cities || []).forEach(c => { %>
+          <option value="<%= c.id %>" <%= vehicle.preferredRouteSourceCityId===c.id ? 'selected' : '' %>><%= c.name %><%= c.state ? ' ('+c.state+')' : '' %></option>
+        <% }) %>
+      </select>
+    </div>
+    <div class="col-md-4">
+      <label class="form-label">Preferred Route Destination City</label>
+      <select class="form-select" name="preferredRouteDestinationCityId">
+        <option value="">-- Select City --</option>
+        <% (cities || []).forEach(c => { %>
+          <option value="<%= c.id %>" <%= vehicle.preferredRouteDestinationCityId===c.id ? 'selected' : '' %>><%= c.name %><%= c.state ? ' ('+c.state+')' : '' %></option>
+        <% }) %>
+      </select>
+    </div>
+
+
+
+    <div class="col-12 form-check ms-2">
+      <input class="form-check-input" type="checkbox" name="isActive" <%= vehicle.isActive ? 'checked' : '' %> id="activeCheck" />
+      <label class="form-check-label" for="activeCheck">Active?</label>
+    </div>
+    <div class="col-12">
+      <button type="submit" class="btn btn-primary"><i class="bi bi-save"></i> Update</button>
+    </div>
+  </div>
+</form>
+
+

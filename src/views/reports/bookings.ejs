@@ -1,0 +1,92 @@
+<% layout('layout') %>
+<div class="d-flex align-items-center justify-content-between mb-3">
+  <h3 class="mb-0">Bookings Report</h3>
+  <div>
+    <a class="btn btn-outline-secondary" href="/reports">Dashboard</a>
+  </div>
+  </div>
+
+<form method="get" class="card card-body shadow-sm mb-3">
+  <div class="row g-2 align-items-end">
+    <div class="col-md-4">
+      <label class="form-label">From</label>
+      <input class="form-control" type="datetime-local" name="from" value="<%= range.from %>">
+    </div>
+    <div class="col-md-4">
+      <label class="form-label">To</label>
+      <input class="form-control" type="datetime-local" name="to" value="<%= range.to %>">
+    </div>
+    <div class="col-md-4">
+      <button class="btn btn-outline-primary" type="submit"><i class="bi bi-funnel"></i> Apply</button>
+      <a class="btn btn-link" href="/reports/bookings">Reset</a>
+      <a class="btn btn-success" href="/reports/export/bookings.csv?from=<%= range.from %>&to=<%= range.to %>"><i class="bi bi-download"></i> Export CSV</a>
+    </div>
+  </div>
+</form>
+
+<div class="row g-3 mb-3">
+  <div class="col-md-3">
+    <div class="card shadow-sm"><div class="card-body">
+      <h6 class="text-muted mb-1">Total Bookings</h6>
+      <div class="display-6"><%= totals.totalBookings %></div>
+    </div></div>
+  </div>
+  <div class="col-md-3">
+    <div class="card shadow-sm"><div class="card-body">
+      <h6 class="text-muted mb-1">Party Amount</h6>
+      <div class="display-6"><%= totals.sumPartyRate %></div>
+    </div></div>
+  </div>
+  <div class="col-md-3">
+    <div class="card shadow-sm"><div class="card-body">
+      <h6 class="text-muted mb-1">Malik Amount</h6>
+      <div class="display-6"><%= totals.sumMalikRate %></div>
+    </div></div>
+  </div>
+  <div class="col-md-3">
+    <div class="card shadow-sm"><div class="card-body">
+      <h6 class="text-muted mb-1">Commission</h6>
+      <div class="display-6"><%= totals.sumCommission %></div>
+    </div></div>
+  </div>
+</div>
+
+<div class="table-responsive card shadow-sm">
+  <table class="table table-hover table-striped mb-0">
+    <thead class="table-light">
+      <tr>
+        <th>Date</th>
+        <th>Party</th>
+        <th>From</th>
+        <th>To</th>
+        <th>Pickup Address</th>
+        <th>Drop Address</th>
+        <th>Vehicle</th>
+        <th class="text-end">Malik Rate</th>
+        <th class="text-end">Party Rate</th>
+        <th class="text-end">Commission</th>
+        <th class="text-end">Paid by Party</th>
+        <th class="text-end">Paid to Malik</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% bookings.forEach(b => { %>
+        <tr>
+          <td><%= new Date(b.bookingDate).toISOString().slice(0,10) %></td>
+          <td><%= b.partyName %></td>
+          <td><%= b.sourceCity ? b.sourceCity.name : '' %></td>
+          <td><%= b.destinationCity ? b.destinationCity.name : '' %></td>
+          <td><%= b.pickupAddress || '' %></td>
+          <td><%= b.dropAddress || '' %></td>
+          <td><%= b.vehicleId ? (b.vehicle?.vehicleNumber || '') : '' %></td>
+          <td class="text-end"><%= b.malikRate %></td>
+          <td class="text-end"><%= b.partyRate %></td>
+          <td class="text-end"><%= b.commission %></td>
+          <td class="text-end"><%= b.payment ? b.payment.paidByParty : 0 %></td>
+          <td class="text-end"><%= b.payment ? b.payment.paidToMalik : 0 %></td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</div>
+
